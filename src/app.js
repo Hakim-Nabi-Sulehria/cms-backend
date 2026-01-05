@@ -13,8 +13,25 @@ const app = express();
 app.use(helmet());
 
 // CORS configuration
+// app.use(cors({
+//   origin: ['http://localhost:3000', 'http://127.0.0.1:3000','https://cms-frontend-5mz5xemt8-hakimbt92-2453s-projects.vercel.app'],
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000','https://cms-frontend-5mz5xemt8-hakimbt92-2453s-projects.vercel.app'],
+  origin: function (origin, callback) {
+    if (
+      !origin ||
+      origin.startsWith("http://localhost") ||
+      origin.endsWith(".vercel.app")
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
